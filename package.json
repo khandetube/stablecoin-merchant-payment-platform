@@ -2,6 +2,7 @@
   "name": "stablecoin-merchant-payment-platform",
   "version": "1.0.0",
   "private": true,
+  "description": "EVM stablecoin merchant payment and settlement MVP",
   "scripts": {
     "test": "hardhat test",
     "compile": "hardhat compile",
@@ -12,5 +13,8 @@
     "hardhat": "^2.22.0",
     "typescript": "^5.0.0",
     "ts-node": "^10.9.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
   }
 }
