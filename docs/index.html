@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StablePay Merchant Demo</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eaf2ff;background:#07111f}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 10%,#15345c 0,#07111f 38%,#040a12 100%);min-height:100vh}
+main{max-width:1120px;margin:auto;padding:32px 20px 56px}.top{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:28px}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#6ee7f9,#8b5cf6);color:#06101d;font-weight:900}
+h1{font-size:clamp(28px,5vw,48px);margin:0 0 8px;letter-spacing:-.04em}.muted{color:#8fa3bd}.pill{border:1px solid #29425f;background:#0c1b2d;padding:8px 12px;border-radius:999px;font-size:13px}
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:20px;margin-bottom:20px}.card{background:rgba(10,24,40,.82);border:1px solid #1e3550;border-radius:20px;padding:22px;box-shadow:0 18px 60px #0004}
+.hero .card:first-child{padding:30px}.eyebrow{color:#72e5f6;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.metric strong{display:block;font-size:25px;margin-top:8px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}button{border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer;background:#7dd3fc;color:#06101d}button.secondary{background:#172a40;color:#d9e8fa;border:1px solid #2a4563}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.step{padding:16px;border:1px solid #203a56;border-radius:14px;background:#091827}.step b{display:block;margin-bottom:6px}
+.status{margin-top:16px;padding:12px 14px;border-radius:12px;background:#081522;border:1px dashed #2d5578;color:#9fc2df;min-height:44px}
+pre{white-space:pre-wrap;word-break:break-word;color:#b8d5ee;background:#06101b;padding:14px;border-radius:12px;overflow:auto}
+@media(max-width:800px){.hero,.grid,.steps{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<main>
+<header class="top"><div class="brand"><div class="logo">SP</div><div><b>StablePay</b><div class="muted">Merchant settlement platform</div></div></div><span class="pill">Portfolio Demo · Testnet-ready</span></header>
+<section class="hero">
+<div class="card"><div class="eyebrow">Web3 Payment Infrastructure</div><h1>Stablecoin payments, merchant accounting, settlement.</h1><p class="muted">A working frontend prototype for the Solidity/EVM payment contract in this repository. The UI models the customer payment lifecycle without requesting seed phrases or private keys.</p>
+<div class="actions"><button id="connect">Connect Wallet</button><button class="secondary" id="pay">Simulate Payment</button></div><div class="status" id="status">Wallet disconnected · Demo mode</div></div>
+<div class="card"><div class="eyebrow">Demo Account</div><h2>Merchant #1001</h2><p class="muted">Settlement address</p><pre>0x7A3...9F21</pre><p class="muted">Available balance</p><div style="font-size:34px;font-weight:900">1,250.00 mUSDT</div></div>
+</section>
+<section class="grid">
+<div class="card metric"><span class="muted">Payments</span><strong id="payments">24</strong><span class="muted">processed</span></div>
+<div class="card metric"><span class="muted">Settled</span><strong>18</strong><span class="muted">transactions</span></div>
+<div class="card metric"><span class="muted">Replay Protection</span><strong>ON</strong><span class="muted">payment IDs</span></div>
+</section>
+<section class="card" style="margin-top:18px"><div class="eyebrow">Payment Lifecycle</div><div class="steps">
+<div class="step"><b>01 · Connect</b><span class="muted">Customer wallet</span></div>
+<div class="step"><b>02 · Approve</b><span class="muted">ERC-20 allowance</span></div>
+<div class="step"><b>03 · Pay</b><span class="muted">PaymentReceived event</span></div>
+<div class="step"><b>04 · Settle</b><span class="muted">Operator settlement</span></div>
+</div></section>
+<section class="card" style="margin-top:18px"><div class="eyebrow">Latest Event</div><pre id="event">No transaction submitted in this demo.</pre></section>
+</main>
+<script>
+const status=document.getElementById('status'),eventBox=document.getElementById('event'),payments=document.getElementById('payments');
+document.getElementById('connect').onclick=async()=>{if(window.ethereum){try{const a=await ethereum.request({method:'eth_requestAccounts'});status.textContent='Wallet connected · '+a[0].slice(0,6)+'...'+a[0].slice(-4)}catch(e){status.textContent='Wallet connection cancelled'}}else status.textContent='No injected wallet detected · Demo mode'};
+document.getElementById('pay').onclick=()=>{const id='demo-'+Date.now();payments.textContent=String(Number(payments.textContent)+1);status.textContent='Payment simulated · merchant balance updated';eventBox.textContent=JSON.stringify({event:'PaymentReceived',paymentId:id,merchantId:'1001',amount:'50.00 mUSDT',status:'simulated'},null,2)};
+</script>
+</body>
+</html>
